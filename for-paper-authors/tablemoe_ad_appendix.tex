@@ -35,9 +35,9 @@ reuse in MoE MLLMs.
 \item[$C_2$] We evaluate TableMoE against representative baselines under
 different expert cache ratios and show that TableMoE delivers consistently
 better latency across the cache-ratio range.
-\item[$C_3$] We analyze the effect of the prefill recomputation ratio on
+\item[$C_3$] We analyze the effect of the prefill recompute ratio on
 TableMoE and show the tradeoff between latency, cache-hit behavior, and
-accuracy under different prefill recomputation settings.
+accuracy under different prefill recompute ratio settings.
 \end{description}
 
 \subsection{Computational Artifacts}
@@ -85,9 +85,8 @@ the training-free TableMoE workflow on the supported models and datasets
 provided by the repository. Second, for $C_2$, the artifact should reproduce
 the performance comparison between TableMoE and the representative baselines
 under different expert cache ratios. Third, for $C_3$, the artifact should
-reproduce the TableMoE comparison under different prefill recomputation
-keep-rate settings in terms of TTFT, TPOT, accuracy, and decode-only cache hit
-rate.
+reproduce the TableMoE comparison under different prefill recompute ratio
+settings in terms of TTFT, TPOT, accuracy, and decode-only cache hit rate.
 
 \arttime
 
@@ -116,10 +115,18 @@ connected via PCIe~4.0~$\times$16.
 \artinpart{Software}
 
 The software environment used for evaluation is configured as follows:
-Ubuntu@22.04.4, Python@3.10.18, CUDA@12.8, NVIDIA Driver@580.95.05,
-PyTorch@2.8.0+cu128, Transformers@4.57.0, FlashAttention@2.7.3, and
-Triton@3.4.0. When running DeepSeek-VL2, switch Transformers to 4.38.0 and
-install xformers@0.0.32.post1 as described in the repository README.
+\href{https://ubuntu.com/}{Ubuntu}@22.04.4,
+\href{https://www.python.org/}{Python}@3.10.18,
+\href{https://developer.nvidia.com/cuda-toolkit}{CUDA}@12.8,
+\href{https://www.nvidia.com/drivers/}{NVIDIA Driver}@580.95.05,
+\href{https://pytorch.org/}{PyTorch}@2.8.0+cu128,
+\href{https://github.com/huggingface/transformers}{Transformers}@4.57.0,
+\href{https://github.com/Dao-AILab/flash-attention}{FlashAttention}@2.7.3,
+and \href{https://github.com/triton-lang/triton}{Triton}@3.4.0. When running
+\href{https://huggingface.co/deepseek-ai/deepseek-vl2}{DeepSeek-VL2}, switch
+\href{https://github.com/huggingface/transformers}{Transformers} to 4.38.0 and
+install \href{https://github.com/facebookresearch/xformers}{xformers}@0.0.32.post1
+as described in the repository README.
 
 \artinpart{Datasets / Inputs}
 
@@ -129,16 +136,16 @@ the scripts provided in the repository README.
 \begin{itemize}
 \item Models:
   \begin{itemize}
-  \item Qwen3-VL-30B-A3B-Instruct
-  \item DeepSeek-VL2
+  \item \href{https://huggingface.co/Qwen/Qwen3-VL-30B-A3B-Instruct}{Qwen3-VL-30B-A3B-Instruct}
+  \item \href{https://huggingface.co/deepseek-ai/deepseek-vl2}{DeepSeek-VL2}
   \end{itemize}
 \item Datasets:
   \begin{itemize}
-  \item RealWorldQA
-  \item MMBench\_DEV\_EN\_V11
-  \item AI2D\_TEST
-  \item ScienceQA\_TEST
-  \item POPE
+  \item \href{https://opencompass.openxlab.space/utils/VLMEval/RealWorldQA.tsv}{RealWorldQA}
+  \item \href{https://opencompass.openxlab.space/utils/benchmarks/MMBench/MMBench_DEV_EN_V11.tsv}{MMBench\_DEV\_EN\_V11}
+  \item \href{https://opencompass.openxlab.space/utils/VLMEval/AI2D_TEST.tsv}{AI2D\_TEST}
+  \item \href{https://opencompass.openxlab.space/utils/benchmarks/ScienceQA/ScienceQA_TEST.tsv}{ScienceQA\_TEST}
+  \item \href{https://opencompass.openxlab.space/utils/VLMEval/POPE.tsv}{POPE}
   \end{itemize}
 \end{itemize}
 
@@ -160,7 +167,7 @@ Section 2 of the repository README.
 \item[$T_2$] Prepare the required inputs following Section 3.1 of the
 repository README, including the models, datasets, and offline tables.
 \item[$T_3$] Run the evaluation workflow under different expert cache-ratio
-and prefill recomputation keep-rate settings to compare TableMoE with the
+and prefill recompute ratio settings to compare TableMoE with the
 representative baselines. This step measures the main performance, accuracy,
 and decode-only cache-hit-rate metrics reported in the paper.
 \end{description}
@@ -168,13 +175,22 @@ and decode-only cache-hit-rate metrics reported in the paper.
 The workflow dependency is as follows:
 $T_1 \rightarrow T_2 \rightarrow T_3$.
 
+Experimental parameters. In the quick reproduction workflow, we evaluate
+TableMoE and the representative baselines under the same evaluation setting
+used in the paper unless otherwise specified. We use batch size 1 and FP16
+precision. The quick reproduction covers the main performance, accuracy, and
+decode-only cache-hit-rate results under multiple expert cache-ratio settings
+and multiple prefill recompute ratio settings. The exact command lines and
+parameter values are listed in the repository README and the generated
+manifest files.
+
 \artout
 
 The outputs include a human-readable quick-reproduction report, a
 machine-readable manifest, summary tables for performance and accuracy, and
 the corresponding intermediate evaluation results. These outputs cover the base
 accuracy comparison, the performance comparison across different cache ratios,
-and the TableMoE comparison across different prefill recomputation keep-rate
-settings in terms of performance, accuracy, and decode-only cache hit rate.
+and the TableMoE comparison across different prefill recompute ratio settings
+in terms of performance, accuracy, and decode-only cache hit rate.
 
 \end{document}
