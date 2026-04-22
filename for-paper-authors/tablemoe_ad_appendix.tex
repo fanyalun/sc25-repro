@@ -53,18 +53,12 @@ tables published at
 \end{description}
 
 \begin{center}
-\begin{tabular}{rll}
+\begin{tabular}{cll}
 \toprule
 Artifact ID  &  Contributions &  Related \\
              &  Supported     &  Paper Elements \\
 \midrule
-$A_1$   &  $C_1$ & Table III, Figure 11, Figure 12 \\
-\midrule
-$A_1$   &  $C_2$ & Figure 11, Figure 12 \\
-\midrule
-$A_1$   &  $C_3$ & Figure 12, Figure 14, Figure 15 \\
-\midrule
-$A_1$   &  $C_4$ & Table II, Figures 9--15 \\
+$A_1$   &  $C_1$--$C_4$ & Tables II--III, Figures 9--15 \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -114,46 +108,29 @@ connected via PCIe~4.0~$\times$16.
 
 \artinpart{Software}
 
-The validated software stack is:
-\begin{itemize}
-\item Ubuntu 22.04.4 LTS (\url{https://ubuntu.com/})
-\item Python 3.10.18 (\url{https://www.python.org/})
-\item CUDA 12.8 (\url{https://developer.nvidia.com/cuda-toolkit})
-\item NVIDIA Driver 580.95.05 (\url{https://www.nvidia.com/drivers})
-\item PyTorch 2.8.0+cu128 (\url{https://pytorch.org/})
-\item torchvision 0.23.0+cu128
-(\url{https://pytorch.org/vision/stable/index.html})
-\item transformers 4.57.0
-(\url{https://github.com/huggingface/transformers})
-\item flash-attn 2.7.3
-(\url{https://github.com/Dao-AILab/flash-attention})
-\item triton 3.4.0 (\url{https://github.com/triton-lang/triton})
-\item TableMoE repository
-(\url{https://github.com/fanyalun/tablemoe-sc26.git})
-\end{itemize}
-The quick reproduction path does not require CUTLASS, MoE-Infinity,
-Pregated-MoE, or a local judge model.
+The software environment used for evaluation is configured as follows:
+Ubuntu@22.04.4, Python@3.10.18, CUDA@12.8, NVIDIA Driver@580.95.05,
+PyTorch@2.8.0+cu128, torchvision@0.23.0+cu128, Transformers@4.57.0,
+FlashAttention@2.7.3, and Triton@3.4.0.
 
 \artinpart{Datasets / Inputs}
 
-The artifact requires the model checkpoint, the benchmark TSV files, and the
-optional released offline tables described in Sections 1--3 of the repository
-README.
+We use two MoE MLLMs and five public multimodal benchmarks in our evaluation,
+as listed below. The models and datasets can be downloaded and prepared using
+the scripts provided in the repository README.
 \begin{itemize}
-\item Model checkpoint
-\item Benchmark TSV files
-\item Optional released offline tables
+\item Models: Qwen3-VL-30B-A3B-Instruct and DeepSeek-VL2
+\item Datasets: RealWorldQA, MMBench\_DEV\_EN\_V11, AI2D\_TEST,
+ScienceQA\_TEST, and POPE
 \end{itemize}
-
-The remaining installation and input details follow Sections 1--3 of the
-repository README.
 
 \artinpart{Installation and Deployment}
 
-Please follow Section 2 of the repository README to create the Python
-environment and install the required dependencies. If a prebuilt flash-attn
-wheel is unavailable for the local environment, the same CUDA 12.8 toolchain
-must be used to build it locally.
+We use a Conda-based Python environment as the base execution environment.
+Please follow the instructions in Section 2 of the repository README to set up
+the environment and install the required Python dependencies. If a prebuilt
+flash-attn wheel is unavailable for the local environment, the same CUDA 12.8
+toolchain must be used to build it locally.
 
 \artcomp
 
@@ -162,14 +139,17 @@ The quick reproduction workflow is:
 \item[$T_1$] Prepare the environment and install the dependencies following
 Section 2 of the repository README.
 \item[$T_2$] Prepare the required inputs following Section 3.1 of the
-repository README, including the model checkpoint, benchmark TSV files, and
-optionally the released offline tables.
-\item[$T_3$] Run the quick reproduction workflow in Section 3.2 of the
-repository README. This executes \texttt{eval\_perf} and \texttt{eval\_acc}
-and writes the corresponding summary tables.
+repository README.
+\item[$T_3$] Optionally prepare the offline tables by downloading the released
+version or rebuilding them locally.
+\item[$T_4$] Run \texttt{eval\_perf} following Section 3.2 of the repository
+README.
+\item[$T_5$] Run \texttt{eval\_acc} following Section 3.2 of the repository
+README.
 \end{description}
 
-The workflow dependency is $T_1 \rightarrow T_2 \rightarrow T_3$.
+The workflow dependency is as follows:
+$T_1 \rightarrow T_2 \rightarrow T_3$, and $T_3 \rightarrow T_4$, $T_3 \rightarrow T_5$.
 
 \artout
 
