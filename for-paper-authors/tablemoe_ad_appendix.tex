@@ -172,30 +172,11 @@ when the \texttt{report} stage executes successfully.
 
 \artout
 
-The main outputs are written under \path{perf_results/<result_dir_name>/} and
-\path{acc_results/<result_dir_name>/}. For the quick reproduction workflow,
-the intermediate outputs are stored under
-\path{perf_results/quick_reproduction/} and
-\path{acc_results/quick_reproduction/}, and the final top-level artifacts are
-\path{perf_results/quick_reproduction/summary/quick_reproduction_report.md}
-and
-\path{perf_results/quick_reproduction/summary/quick_reproduction_manifest.json}.
-The markdown report is the primary human-readable artifact, and the manifest is
-the machine-readable index of the quick-reproduction experiment roots and the
-configuration used to render the final report. The final markdown report
-contains the base accuracy comparison, the cache-ratio performance comparison,
-and the keep-rate comparison of TableMoE in terms of performance, accuracy,
-and decode-only cache hit rate.
-
-For arbitrary-parameter runs, the repository writes the following summary
-tables:
-\begin{itemize}
-\item \path{perf_results/<result_dir_name>/summary/\{perf_table,simple_accuracy_table\}.\{json,csv,md\}}
-\item \path{acc_results/<result_dir_name>/summary/accuracy_table.\{json,csv,md\}}
-\end{itemize}
-
-These outputs are used to compare the baseline methods and TableMoE across the
-supported models, datasets, cache ratios, and prefill recomputation
-keep-rate settings.
+The outputs include a human-readable quick-reproduction report, a
+machine-readable manifest, summary tables for performance and accuracy, and
+the corresponding intermediate evaluation results. These outputs cover the base
+accuracy comparison, the performance comparison across different cache ratios,
+and the TableMoE comparison across different prefill recomputation keep-rate
+settings in terms of performance, accuracy, and decode-only cache hit rate.
 
 \end{document}
