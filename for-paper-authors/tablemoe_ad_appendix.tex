@@ -29,17 +29,15 @@ Appendix: Artifact Description
 \subsection{Paper's Main Contributions}
 
 \begin{description}
-\item[$C_1$] We introduce a prototype-based approximate lookup table (ALUT)
-mechanism for accelerating MoE-based MLLMs by replacing redundant expert
-execution with approximate lookup and reuse.
-\item[$C_2$] We design a sliding-window reuse cache that exploits in-context
-locality during decoding to improve approximation fidelity and preserve model
-accuracy.
-\item[$C_3$] We propose an expert-level importance-aware scheduler that
-selects which experts should be recomputed exactly and which can be served via
-approximate reuse.
-\item[$C_4$] We present an experimental evaluation showing that TableMoE
-reduces TTFT and TPOT while maintaining high task accuracy without retraining.
+\item[$C_1$] We propose TableMoE, a training-free multimodal lookup framework
+that replaces redundant MoE expert computation with table lookup and expert
+reuse in MoE MLLMs.
+\item[$C_2$] We evaluate TableMoE against representative baselines under
+different expert cache ratios and show that TableMoE delivers consistently
+better latency across the cache-ratio range.
+\item[$C_3$] We analyze the effect of the prefill recomputation ratio on
+TableMoE and show the tradeoff between latency, cache-hit behavior, and
+accuracy under different prefill recomputation settings.
 \end{description}
 
 \subsection{Computational Artifacts}
@@ -58,7 +56,11 @@ tables published at
 Artifact ID  &  Contributions &  Related \\
              &  Supported     &  Paper Elements \\
 \midrule
-$A_1$   &  $C_1$--$C_4$ & Tables II--III, Figures 9--15 \\
+$A_1$   &  $C_1$ & Tables II--III, Figures 9--12 \\
+\midrule
+$A_1$   &  $C_2$ & Figure 13 \\
+\midrule
+$A_1$   &  $C_3$ & Figures 14--15 \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -72,7 +74,7 @@ $A_1$   &  $C_1$--$C_4$ & Tables II--III, Figures 9--15 \\
 This artifact contains the implementation of TableMoE, including the offline
 ALUT construction pipeline, the runtime reuse/cache/scheduling logic, and the
 evaluation scripts used to measure latency and accuracy. The same artifact is
-used to support all four contributions of the paper.
+used to support all three contributions of the paper.
 
 \artexp
 
