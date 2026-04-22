@@ -43,26 +43,26 @@ accuracy under different prefill recomputation settings.
 \subsection{Computational Artifacts}
 
 \begin{description}
-\item[$A_1$] Artifact archive DOI: N/A at the AD stage. The current public
-artifact consists of the TableMoE source repository
-(\url{https://github.com/fanyalun/tablemoe-sc26.git}) and the released offline
-tables published at
-\url{https://huggingface.co/buckets/fanyafanya/ALUTs}.
+\item[$A_1$]
+\begin{itemize}
+\item DOI: N/A at the AD stage
+\item Repository: \url{https://github.com/fanyalun/tablemoe-sc26.git}
+\item Released offline tables:
+\url{https://huggingface.co/buckets/fanyafanya/ALUTs}
+\end{itemize}
 \end{description}
 
 \begin{center}
-\begin{tabular}{cll}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lll}
 \toprule
 Artifact ID  &  Contributions &  Related \\
              &  Supported     &  Paper Elements \\
 \midrule
 $A_1$   &  $C_1$ & Tables II--III, Figures 9--12 \\
-\midrule
 $A_1$   &  $C_2$ & Figure 13 \\
-\midrule
 $A_1$   &  $C_3$ & Figures 14--15 \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{center}
 
 \section{Artifact Identification}
@@ -103,9 +103,9 @@ and \texttt{eval\_acc} writes
 Setup: 10--30 minutes. This includes cloning the repository, creating the
 Python environment, and installing the required dependencies.
 
-Execution: about 20--30 minutes for the performance and cache-hit stages,
-about 2 hours for the accuracy stage, and only a few additional minutes for
-the final report generation in the quick reproduction workflow. Preparing the
+Execution: about 1--1.5 hours for the performance and cache-hit stages, about
+2--2.5 hours for the accuracy stage, and only a few additional minutes for the
+final report generation in the quick reproduction workflow. Preparing the
 released offline tables usually takes 10--20 minutes; rebuilding them locally
 instead of downloading the released version adds about 2--3 hours to the
 execution stage.
