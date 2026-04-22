@@ -53,7 +53,7 @@ accuracy under different prefill recomputation settings.
 \end{description}
 
 \begin{center}
-\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lll}
+\begin{tabular}{@{\hspace{0.8em}}cll@{\hspace{0.8em}}}
 \toprule
 Artifact ID  &  Contributions &  Related \\
              &  Supported     &  Paper Elements \\
@@ -62,7 +62,7 @@ $A_1$   &  $C_1$ & Tables II--III, Figures 9--12 \\
 $A_1$   &  $C_2$ & Figure 13 \\
 $A_1$   &  $C_3$ & Figures 14--15 \\
 \bottomrule
-\end{tabular*}
+\end{tabular}
 \end{center}
 
 \section{Artifact Identification}
@@ -86,33 +86,20 @@ reproduce the TableMoE comparison under different prefill recomputation
 keep-rate settings in terms of TTFT, TPOT, accuracy, and decode-only cache hit
 rate.
 
-The repository writes intermediate quick-reproduction outputs under
-\path{perf_results/quick_reproduction/} and
-\path{acc_results/quick_reproduction/}. The final quick-reproduction artifacts
-are
-\path{perf_results/quick_reproduction/summary/quick_reproduction_report.md}
-and
-\path{perf_results/quick_reproduction/summary/quick_reproduction_manifest.json}.
-For arbitrary-parameter runs, \texttt{eval\_perf} writes
-\path{perf_results/<result_dir_name>/summary/\{perf_table,simple_accuracy_table\}.\{json,csv,md\}},
-and \texttt{eval\_acc} writes
-\path{acc_results/<result_dir_name>/summary/accuracy_table.\{json,csv,md\}}.
-
 \arttime
 
-Setup: 10--30 minutes. This includes cloning the repository, creating the
-Python environment, and installing the required dependencies.
+\noindent\textbf{Setup:} 10--30 minutes. This includes cloning the repository,
+creating the Python environment, and installing the required dependencies.
 
-Execution: about 1--1.5 hours for the performance and cache-hit stages, about
-2--2.5 hours for the accuracy stage, and only a few additional minutes for the
-final report generation in the quick reproduction workflow. Preparing the
-released offline tables usually takes 10--20 minutes; rebuilding them locally
-instead of downloading the released version adds about 2--3 hours to the
-execution stage.
+\noindent\textbf{Execution:} about 1--1.5 hours for the performance and
+cache-hit stages and about 2--2.5 hours for the accuracy stage in the quick
+reproduction workflow. Preparing the released offline tables usually takes
+10--20 minutes; rebuilding them locally instead of downloading the released
+version adds about 2--3 hours to the execution stage.
 
-Analysis: less than 5 minutes. The scripts write the main comparison tables,
-manifest, and summary files directly to the result directories during
-execution.
+\noindent\textbf{Analysis:} less than 5 minutes. The scripts write the main
+comparison tables, manifest, and summary files directly to the result
+directories during execution.
 
 \artin
 
@@ -171,14 +158,9 @@ Section 2 of the repository README.
 repository README, including the models, datasets, and offline tables.
 \item[$T_3$] Run \texttt{run\_quick\_reproduction.sh}. This workflow executes
 the \texttt{perf}, \texttt{cache\_hit}, \texttt{acc}, and \texttt{report}
-stages and writes the quick-reproduction outputs under
-\path{perf_results/quick_reproduction/} and
-\path{acc_results/quick_reproduction/}.
+stages of the quick reproduction workflow.
 \item[$T_4$] For arbitrary-parameter sweeps, run \texttt{eval\_perf} and
-\texttt{eval\_acc} following Section 4 of the repository README. These scripts
-write the full-reproduction summary tables under the corresponding
-\path{perf_results/<result_dir_name>/summary/} and
-\path{acc_results/<result_dir_name>/summary/} directories.
+\texttt{eval\_acc} following Section 4 of the repository README.
 \end{description}
 
 The workflow dependency is as follows:
