@@ -48,10 +48,8 @@ reduces TTFT and TPOT while maintaining high task accuracy without retraining.
 \item[$A_1$] Artifact archive DOI: N/A at the AD stage. The current public
 artifact consists of the TableMoE source repository
 (\url{https://github.com/fanyalun/tablemoe-sc26.git}) and the released offline
-tables for the default Qwen path (Hugging Face bucket
-\texttt{fanyafanya/ALUTs}). This appendix focuses on the default
-single-GPU/single-NUMA reproduction path for
-\texttt{Qwen3-VL-30B-A3B-Instruct}.
+tables published at
+\url{https://huggingface.co/buckets/fanyafanya/ALUT}.
 \end{description}
 
 \begin{center}
@@ -80,35 +78,27 @@ $A_1$   &  $C_4$ & Table II, Figures 9--15 \\
 This artifact contains the implementation of TableMoE, including the offline
 ALUT construction pipeline, the runtime reuse/cache/scheduling logic, and the
 evaluation scripts used to measure latency and accuracy. The same artifact is
-used to support all four contributions of the paper. The minimum reproduction
-path in this appendix uses the default Qwen single-GPU configuration, while the
-repository keeps the parameterized evaluation entrypoints that are used for the
-broader paper results.
+used to support all four contributions of the paper.
 
 \artexp
 
-The minimum reproduction path is expected to generate three summary outputs:
-(1) a TTFT/TPOT summary from \texttt{eval\_perf}, (2) a lightweight accuracy
-comparison written by \texttt{eval\_perf}, and (3) an accuracy summary written
-by \texttt{eval\_acc}. Under the default settings, TableMoE should show lower
-prefilling latency than the default offloading baselines in the quick
-reproduction path (\texttt{adapmoe} and \texttt{skip}), while preserving model
-quality close to the \texttt{transformers} baseline in the accuracy evaluation.
-The same repository also contains the parameterized scripts used to regenerate
-the wider paper result set, including Table II, Table III, and Figures 9--15.
+This artifact is expected to reproduce the main latency and accuracy trends
+reported in the paper. The quick reproduction path generates a TTFT/TPOT
+summary from \texttt{eval\_perf}, a lightweight accuracy comparison from
+\texttt{eval\_perf}, and an accuracy summary from \texttt{eval\_acc}. These
+outputs correspond to the paper's main evaluation results.
 
 \arttime
 
 \begin{description}
 \item[Setup] 10--30 minutes. This covers cloning the repository, creating the
-Python environment, and installing the dependencies for the minimum path.
+Python environment, and installing the dependencies.
 \item[Optional offline-table preparation] Downloading the released offline
 tables takes 10--20 minutes. Rebuilding the offline tables locally takes about
 2--3 hours, depending on storage speed and the time required to profile and
 cluster routed hidden states.
-\item[Execution] Running \texttt{eval\_perf} takes about 20--30 minutes for the
-default RealWorldQA path. Running \texttt{eval\_acc} takes about 2 hours for
-the same default path.
+\item[Execution] Running \texttt{eval\_perf} takes about 20--30 minutes.
+Running \texttt{eval\_acc} takes about 2 hours.
 \item[Analysis] Less than 5 minutes. The scripts write the main comparison
 tables directly to the result directories.
 \end{description}
@@ -117,14 +107,14 @@ tables directly to the result directories.
 
 \artinpart{Hardware}
 
-All experiments in the minimum reproduction path are conducted on a CPU--GPU
+All experiments are conducted on a CPU--GPU
 heterogeneous platform using one NUMA node of an Intel Xeon Gold 5318Y CPU
 (24 cores), 256~GB DDR4 memory, and one NVIDIA A100 PCIe GPU with 80~GB HBM,
 connected via PCIe~4.0~$\times$16.
 
 \artinpart{Software}
 
-The validated software stack for the minimum reproduction path is:
+The validated software stack is:
 \begin{itemize}
 \item Ubuntu 22.04.4 LTS (\url{https://ubuntu.com/})
 \item Python 3.10.18 (\url{https://www.python.org/})
@@ -141,34 +131,30 @@ The validated software stack for the minimum reproduction path is:
 \item TableMoE repository
 (\url{https://github.com/fanyalun/tablemoe-sc26.git})
 \end{itemize}
-The minimum path does not require CUTLASS, MoE-Infinity, Pregated-MoE, or a
-local judge model.
+The quick reproduction path does not require CUTLASS, MoE-Infinity,
+Pregated-MoE, or a local judge model.
 
 \artinpart{Datasets / Inputs}
 
-The minimum reproduction path requires the following inputs:
+The artifact requires the model checkpoint, the benchmark TSV files, and the
+optional released offline tables described in Sections 1--3 of the repository
+README. In the quick reproduction path, they are prepared with:
 \begin{itemize}
 \item Model checkpoint: \texttt{Qwen/Qwen3-VL-30B-A3B-Instruct}, downloaded by
 \texttt{bash scripts/download\_model.sh}.
 \item Benchmark TSV file: \texttt{RealWorldQA.tsv}, downloaded by
 \texttt{bash LMUData/download\_datasets.sh}.
-\item Optional released offline table for the default Qwen path, downloaded by
+\item Optional released offline table, downloaded by
 \texttt{bash offline\_table/download\_offline\_table.sh}.
 \end{itemize}
 
-The repository also supports the paper's other public benchmarks
-(\texttt{MMBench\_DEV\_EN\_V11}, \texttt{AI2D\_TEST},
-\texttt{ScienceQA\_TEST}, and \texttt{POPE}) through the same download and
-evaluation entrypoints. For the Qwen model, released offline tables are
-currently published for \texttt{RealWorldQA}, \texttt{MMBench\_DEV\_EN\_V11},
-and \texttt{AI2D\_TEST}. The default evaluation scripts can automatically fetch
-missing published Qwen offline tables when \texttt{HF\_AUTO\_DOWNLOAD=1}
-(default). Any remaining offline tables can be generated locally with
-\texttt{bash offline\_table/run\_offline\_table.sh}.
+The remaining installation and input details follow Sections 1--3 of the
+repository README.
 
 \artinpart{Installation and Deployment}
 
-The minimum path only needs a standard Python environment:
+The artifact uses the standard Python environment documented in the repository
+README:
 
 {\small
 \begin{verbatim}
@@ -183,42 +169,24 @@ pip install flash-attn==2.7.3 --no-build-isolation
 }
 
 If a prebuilt flash-attn wheel is unavailable for the local environment, the
-same CUDA 12.8 toolchain must be used to build it locally. No additional
-third-party baseline compilation is required for the minimum path described in
-this appendix.
+same CUDA 12.8 toolchain must be used to build it locally.
 
 \artcomp
 
-The minimum-path workflow is:
+The quick reproduction workflow is:
 \begin{description}
 \item[$T_1$] Prepare the environment and install the dependencies.
-\item[$T_2$] Download the default Qwen checkpoint and the RealWorldQA TSV file.
-\item[$T_3$] Optionally prepare the offline table. This can be done explicitly
-by downloading the released table or by rebuilding it locally. When the
-published Qwen table is missing, the default evaluation scripts can also
-download it automatically through the built-in \texttt{HF\_AUTO\_DOWNLOAD=1}
-path.
-\item[$T_4$] Run the default performance benchmark with
-\texttt{adapmoe}, \texttt{skip}, and \texttt{tablemoe}.
-\item[$T_5$] Run the default accuracy benchmark with
-\texttt{transformers}, \texttt{skip}, and \texttt{tablemoe}.
+\item[$T_2$] Download the model checkpoint and the dataset TSV file.
+\item[$T_3$] Optionally prepare the offline table by downloading the released
+version or rebuilding it locally.
+\item[$T_4$] Run \texttt{eval\_perf}.
+\item[$T_5$] Run \texttt{eval\_acc}.
 \end{description}
 
 The workflow dependency is
-$T_1 \rightarrow T_2 \rightarrow T_3 \rightarrow T_4 \rightarrow T_5$, where
-$T_3$ is optional when automatic offline-table download succeeds.
+$T_1 \rightarrow T_2 \rightarrow T_3 \rightarrow T_4 \rightarrow T_5$.
 
-The public parameters exposed by the repository include \texttt{MODEL}
-(default \texttt{Qwen3-VL-30B-A3B-Instruct}), \texttt{DATASETS}
-(default \texttt{RealWorldQA}), \texttt{METHODS}, \texttt{CACHE\_RATIO},
-\texttt{KEEP\_RATE}, and \texttt{SAMPLE\_RATIO}. The minimum path uses
-\texttt{CACHE\_RATIO=0.5}, \texttt{KEEP\_RATE=0.6}, and
-\texttt{SAMPLE\_RATIO=0.1} for \texttt{eval\_perf}. For
-\texttt{eval\_acc}, we use \texttt{CACHE\_RATIO=1.0} so that all routed
-experts stay resident on GPU and the accuracy comparison is not dominated by
-offloading variance. The default \texttt{MAX\_NEW\_TOKENS} is 2048.
-
-The minimum reproduction commands are:
+The quick reproduction commands are:
 
 {\small
 \begin{verbatim}
@@ -253,9 +221,7 @@ The main outputs are written directly to disk:
 
 The latency comparison is taken from \texttt{eval\_perf}, while the accuracy
 comparison in this appendix is taken from \texttt{eval\_acc}. These result
-files are the primary outputs used to compare TableMoE with the default
-baselines in the minimum path. The same evaluation entrypoints, when run with
-other public datasets and parameter settings, support the broader paper result
-set summarized in Table II, Table III, and Figures 9--15.
+files are the primary outputs used to compare TableMoE with the baselines in
+the quick reproduction path.
 
 \end{document}
