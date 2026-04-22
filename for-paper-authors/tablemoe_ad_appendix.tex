@@ -79,10 +79,18 @@ used to support all three contributions of the paper.
 \artexp
 
 This artifact is expected to reproduce the main latency and accuracy trends
-reported in the paper. The quick reproduction path generates a TTFT/TPOT
-summary from \texttt{eval\_perf}, a lightweight accuracy comparison from
-\texttt{eval\_perf}, and an accuracy summary from \texttt{eval\_acc}. These
-outputs correspond to the paper's main evaluation results.
+reported in the paper through the repository's quick reproduction workflow.
+The final artifact is
+\path{perf_results/quick_reproduction/summary/quick_reproduction_report.md},
+which contains three summary tables: (1) the accuracy comparison among
+\texttt{transformers}, \texttt{skip}, and \texttt{tablemoe} at the default
+keep-rate setting, (2) the performance comparison across different expert cache
+ratios, and (3) the TableMoE comparison across different prefill
+recomputation/keep-rate settings in terms of TTFT, TPOT, accuracy, and
+decode-only cache hit rate. The companion manifest file
+\path{perf_results/quick_reproduction/summary/quick_reproduction_manifest.json}
+provides a machine-readable index of all intermediate experiment roots and the
+configuration used to render the final report.
 
 \arttime
 
@@ -93,8 +101,12 @@ Python environment, and installing the dependencies.
 tables takes 10--20 minutes. Rebuilding the offline tables locally takes about
 2--3 hours, depending on storage speed and the time required to profile and
 cluster routed hidden states.
-\item[Execution] Running \texttt{eval\_perf} takes about 20--30 minutes.
-Running \texttt{eval\_acc} takes about 2 hours.
+\item[Execution] The full quick reproduction wrapper is composed of four
+stages: \texttt{perf}, \texttt{cache\_hit}, \texttt{acc}, and \texttt{report}.
+In our environment, the \texttt{eval\_perf} stage takes about 20--30 minutes,
+the \texttt{eval\_acc} stage takes about 2 hours, and the final report
+generation is lightweight. The total runtime depends on whether the full
+workflow is executed or a subset of stages is selected through \texttt{STEPS}.
 \item[Analysis] Less than 5 minutes. The scripts write the main comparison
 tables directly to the result directories.
 \end{description}
@@ -144,28 +156,66 @@ Section 2 of the repository README.
 repository README.
 \item[$T_3$] Optionally prepare the offline tables by downloading the released
 version or rebuilding them locally.
-\item[$T_4$] Run \texttt{eval\_perf} following Section 3.2 of the repository
-README.
-\item[$T_5$] Run \texttt{eval\_acc} following Section 3.2 of the repository
-README.
+\item[$T_4$] Run the performance and cache-hit stages of
+\texttt{run\_quick\_reproduction.sh}. These stages organize the outputs under
+\path{perf_results/quick_reproduction/}.
+\item[$T_5$] Run the accuracy stage of \texttt{run\_quick\_reproduction.sh}.
+This stage writes the base comparison and the TableMoE keep-rate sweep under
+the corresponding \path{acc_results/quick_reproduction/} subdirectories.
+\item[$T_6$] Run the report stage of \texttt{run\_quick\_reproduction.sh}.
+This stage renders the final markdown report and manifest.
 \end{description}
 
+The performance stage writes the cache-ratio sweep, keep-rate sweep, and
+decode-only cache-hit statistics under the corresponding
+\path{perf_results/quick_reproduction/} subdirectories.
+
 The workflow dependency is as follows:
-$T_1 \rightarrow T_2 \rightarrow T_3$, and $T_3 \rightarrow T_4$, $T_3 \rightarrow T_5$.
+$T_1 \rightarrow T_2 \rightarrow T_3$, and $T_3 \rightarrow T_4$,
+$T_3 \rightarrow T_5$, and $T_4, T_5 \rightarrow T_6$.
+If the wrapper is invoked with a subset of \texttt{STEPS}, only the
+corresponding subset of artifacts is generated. The complete
+\path{quick_reproduction_report.md} is produced only when the \texttt{report}
+step executes successfully.
 
 \artout
 
-The main outputs are written directly to disk under the default summary
-directories:
+The outputs of \texttt{run\_quick\_reproduction.sh} can be viewed at three
+levels. First, the intermediate raw results are written under
+\path{perf_results/quick_reproduction/} and
+\path{acc_results/quick_reproduction/}. For example, the performance side
+contains cache-ratio roots such as \path{cache_ratio_0_25/},
+\path{cache_ratio_0_5/}, and \path{cache_ratio_0_75/}, keep-rate roots such as
+\path{keep_rate_0_4/}, \path{keep_rate_0_6/}, and \path{keep_rate_0_8/}, and
+cache-hit roots such as \path{cache_hit_keep_rate_0_4/},
+\path{cache_hit_keep_rate_0_6/}, and \path{cache_hit_keep_rate_0_8/}. Each
+\texttt{eval\_perf} run directory contains raw files such as
+\path{run_config.json}, \path{output.json}, \path{metrics.json}, and
+\path{accuracy.json}. Each cache-hit directory contains the core summary file
+\path{decode_cache_hit_summary.json}, whose main fields include
+\texttt{hits}, \texttt{resident\_hits}, \texttt{prefetched\_hits},
+\texttt{misses}, \texttt{total}, and \texttt{hit\_rate}. On the accuracy side,
+the wrapper writes roots such as \path{base_methods/},
+\path{tablemoe_keep_rate_0_4/}, and \path{tablemoe_keep_rate_0_8/}, each of
+which contains a model result directory and the corresponding
+\path{<output_model_name>_summary.\{json,md\}} files.
+
+Second, each evaluation root writes stage-level summary tables:
 \begin{itemize}
-\item \path{perf_results/default/summary/perf_table.\{json,csv,md\}}
-\item \path{perf_results/default/summary/simple_accuracy_table.\{json,csv,md\}}
-\item \path{acc_results/default/summary/accuracy_table.\{json,csv,md\}}
+\item \path{perf_results/quick_reproduction/*/summary/perf_table.\{json,csv,md\}}
+\item \path{perf_results/quick_reproduction/*/summary/simple_accuracy_table.\{json,csv,md\}}
+\item \path{acc_results/quick_reproduction/*/summary/accuracy_table.\{json,csv,md\}}
 \end{itemize}
 
-The latency comparison is taken from \texttt{eval\_perf}, while the accuracy
-comparison in this appendix is taken from \texttt{eval\_acc}. These result
-files are the primary outputs used to compare TableMoE with the baselines in
-the quick reproduction path.
+Third, the final top-level artifacts are:
+\begin{itemize}
+\item \path{perf_results/quick_reproduction/summary/quick_reproduction_report.md}
+\item \path{perf_results/quick_reproduction/summary/quick_reproduction_manifest.json}
+\end{itemize}
+
+The markdown report is the primary human-readable artifact. The manifest is the
+machine-readable index that records the experiment roots for the cache-ratio
+sweeps, keep-rate sweeps, cache-hit sweeps, accuracy sweeps, and the
+configuration used to render the final report.
 
 \end{document}
