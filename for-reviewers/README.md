@@ -1,12 +1,5 @@
-This directory provides the template for an SC25 Reproducibility report.
+This directory provides the template for an SC26 reproducibility report.
 
-There are some TODOs, and in the content of the report, replace the
-instructions of what should be described in the given section with
-the actual description.
-
-The report can be used in two scenarios:
-- if the reviewer is fine with disclosure of identity, nothing to do
-- if the reviewer does want to keep the identity hidden, add the
-  "nonacm" option to the documentclass to prohibit author blob etc,
-  and uncomment the line "\setboolean{standalone}{false}"
-
+Replace the instructional text in the template with the actual review content.
+Use the files in this directory as the reviewer-side companion template for
+the SC26 AD/AE process.
