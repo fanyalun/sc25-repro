@@ -28,15 +28,16 @@ Appendix: Artifact Description
 \subsection{Paper's Main Contributions}
 
 \begin{description}
-\item[$C_1$] We propose TableMoE, a training-free multimodal lookup framework
-that replaces redundant MoE expert computation with table lookup and expert
-reuse in MoE MLLMs.
-\item[$C_2$] We evaluate TableMoE against representative baselines under
-different expert cache ratios and show that TableMoE delivers consistently
-better latency across the cache-ratio range.
-\item[$C_3$] We analyze the effect of the prefill recompute ratio on
-TableMoE and show the tradeoff between latency, cache-hit behavior, and
-accuracy under different prefill recompute ratio settings.
+\item[$C_1$] We introduce TableMoE, a training-free approximate expert lookup
+and reuse framework for MoE MLLMs. TableMoE replaces redundant expert weight
+loading and computation with a prototype-based approximate lookup table, a
+sliding-window reuse cache, and an expert-level importance-aware scheduler.
+\item[$C_2$] We evaluate TableMoE against representative lossless and lossy
+baselines under different expert cache ratios and show that TableMoE provides
+robust prefilling and decoding latency improvements across memory budgets.
+\item[$C_3$] We analyze the prefill recompute ratio in TableMoE and show that
+it controls the tradeoff among prefilling latency, decoding latency, accuracy,
+and decode-only cache hit rate.
 \end{description}
 
 \subsection{Computational Artifacts}
@@ -58,7 +59,7 @@ Artifact ID  &  Contributions &  Related \\
              &  Supported     &  Paper Elements \\
 \midrule
 $A_1$   &  $C_1$ & Tables II--III \\
-        &        & Figures 9--12 \\
+        &        & Figures 5--12 \\
 \midrule
 $A_1$   &  $C_2$ & Figure 13 \\
 \midrule
@@ -74,18 +75,22 @@ $A_1$   &  $C_3$ & Figures 14--15 \\
 \artrel
 
 This artifact contains the source code and released assets of TableMoE and
-covers all contributions of this paper, including $C_1$, $C_2$, and $C_3$.
+covers all contributions of this paper, including the TableMoE framework
+($C_1$), the cache-ratio study ($C_2$), and the prefill recompute ratio study
+($C_3$).
 
 \artexp
 
-This artifact is expected to reproduce the main latency and accuracy trends
-reported in the paper. First, for $C_1$, the artifact should successfully run
-the training-free TableMoE workflow on the supported models and datasets
-provided by the repository. Second, for $C_2$, the artifact should reproduce
-the performance comparison between TableMoE and the representative baselines
-under different expert cache ratios. Third, for $C_3$, the artifact should
-reproduce the TableMoE comparison under different prefill recompute ratio
-settings in terms of TTFT, TPOT, accuracy, and decode-only cache hit rate.
+TableMoE aims to accelerate MoE MLLM inference under CPU--GPU heterogeneous
+architectures while preserving generation quality. First, we expect TableMoE
+under the default configuration to achieve lower TTFT and TPOT than the
+lossless baselines, while achieving higher accuracy and decode-only cache hit
+rate than the lossy baseline. Second, under different expert cache ratios, we
+expect TableMoE to maintain the lowest TTFT and TPOT among the compared
+systems, demonstrating robustness across memory budgets. Third, when sweeping
+the prefill recompute ratio, we expect the results to show that setting the
+ratio to 0.6 provides a balanced hyperparameter choice that preserves accuracy
+while retaining strong performance gains.
 
 \arttime
 
