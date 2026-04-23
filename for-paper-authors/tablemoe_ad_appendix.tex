@@ -29,15 +29,18 @@ Appendix: Artifact Description
 
 \begin{description}
 \item[$C_1$] We introduce TableMoE, a training-free approximate expert lookup
-and reuse framework for MoE MLLMs. TableMoE replaces redundant expert weight
-loading and computation with a prototype-based approximate lookup table, a
-sliding-window reuse cache, and an expert-level importance-aware scheduler.
-\item[$C_2$] We evaluate TableMoE against representative lossless and lossy
-baselines under different expert cache ratios and show that TableMoE provides
-robust prefilling and decoding latency improvements across memory budgets.
-\item[$C_3$] We analyze the prefill recompute ratio in TableMoE and show that
-it controls the tradeoff among prefilling latency, decoding latency, accuracy,
-and decode-only cache hit rate.
+and reuse framework for MoE MLLMs. Specifically, TableMoE reduces redundant
+expert execution and expert-weight loading by combining approximate lookup,
+online reuse, and expert-level scheduling in a CPU--GPU offloading system.
+\item[$C_2$] We propose the approximate reuse mechanisms in Sections IV-B and
+IV-C. Specifically, the prototype-based ALUT replaces exact matching over
+continuous multimodal hidden states with compact semantic prototypes, while
+the sliding-window reuse cache exploits request-local temporal and semantic
+locality for more accurate in-context reuse.
+\item[$C_3$] We propose the expert-level importance-aware scheduler in
+Section IV-D. Specifically, it estimates expert importance at the request and
+expert granularity, and uses the prefill recompute ratio to balance exact
+expert recomputation with approximate reuse.
 \end{description}
 
 \subsection{Computational Artifacts}
@@ -58,12 +61,15 @@ and decode-only cache hit rate.
 Artifact ID  &  Contributions &  Related \\
              &  Supported     &  Paper Elements \\
 \midrule
-$A_1$   &  $C_1$ & Tables II--III \\
-        &        & Figures 5--12 \\
+$A_1$   &  $C_1$ & Figures 9--10 \\
 \midrule
-$A_1$   &  $C_2$ & Figure 13 \\
+$A_1$   &  $C_2$ & Table II \\
+        &        & Figure 11(a) \\
+        &        & Table III \\
 \midrule
-$A_1$   &  $C_3$ & Figures 14--15 \\
+$A_1$   &  $C_3$ & Figure 11(b) \\
+        &        & Figure 12 \\
+        &        & Figures 14--15 \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -76,21 +82,21 @@ $A_1$   &  $C_3$ & Figures 14--15 \\
 
 This artifact contains the source code and released assets of TableMoE and
 covers all contributions of this paper, including the TableMoE framework
-($C_1$), the cache-ratio study ($C_2$), and the prefill recompute ratio study
-($C_3$).
+($C_1$), the approximate reuse mechanisms ($C_2$), and the expert-level
+scheduler ($C_3$).
 
 \artexp
 
 TableMoE aims to accelerate MoE MLLM inference under CPU--GPU heterogeneous
 architectures while preserving generation quality. First, we expect TableMoE
-under the default configuration to achieve lower TTFT and TPOT than the
-lossless baselines, while achieving higher accuracy and decode-only cache hit
-rate than the lossy baseline. Second, under different expert cache ratios, we
-expect TableMoE to maintain the lowest TTFT and TPOT among the compared
-systems, demonstrating robustness across memory budgets. Third, when sweeping
-the prefill recompute ratio, we expect the results to show that setting the
-ratio to 0.6 provides a balanced hyperparameter choice that preserves accuracy
-while retaining strong performance gains.
+to achieve lower TTFT and TPOT than the representative baselines in the default
+configuration. Second, we expect the prototype-based ALUT and sliding-window
+reuse cache to provide higher accuracy than the lossy baseline that directly
+skips the same expert computation, and the final TableMoE system should keep
+accuracy degradation within 1\% of the Transformers baseline. Third, we expect
+the expert-level importance-aware scheduler to further reduce TTFT and TPOT,
+while improving the Decoding Expert Cache Hit Rate over the compared variants
+and baselines.
 
 \arttime
 
