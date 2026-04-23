@@ -32,15 +32,15 @@ Appendix: Artifact Description
 and reuse framework for MoE MLLMs. Specifically, TableMoE reduces redundant
 expert execution and expert-weight loading by combining approximate lookup,
 online reuse, and expert-level scheduling in a CPU--GPU offloading system.
-\item[$C_2$] We propose the approximate reuse mechanisms in Sections IV-B and
-IV-C. Specifically, the prototype-based ALUT replaces exact matching over
-continuous multimodal hidden states with compact semantic prototypes, while
-the sliding-window reuse cache exploits request-local temporal and semantic
+\item[$C_2$] We propose the \textit{prototype-based approximate lookup table}
+and the \textit{sliding-window reuse cache}. Specifically, the former replaces
+exact matching over continuous multimodal hidden states with compact semantic
+prototypes, while the latter exploits request-local temporal and semantic
 locality for more accurate in-context reuse.
-\item[$C_3$] We propose the expert-level importance-aware scheduler in
-Section IV-D. Specifically, it estimates expert importance at the request and
-expert granularity, and uses the prefill recompute ratio to balance exact
-expert recomputation with approximate reuse.
+\item[$C_3$] We propose the \textit{expert-level importance-aware scheduler}.
+Specifically, it estimates expert importance at the request and expert
+granularity, and uses the prefill recompute ratio to balance exact expert
+recomputation with approximate reuse.
 \end{description}
 
 \subsection{Computational Artifacts}
@@ -104,7 +104,7 @@ and baselines.
 creating the Python environment, and installing the required dependencies.
 
 \noindent\textbf{Execution:} about 1--2 hours for the performance and
-cache-hit stages and about 2--2.5 hours for the accuracy stage in the quick
+cache-hit stages and about 3--4 hours for the accuracy stage in the quick
 reproduction workflow. Preparing the released offline tables usually takes
 10--20 minutes; rebuilding them locally instead of downloading the released
 version adds about 2--3 hours to the execution stage.
@@ -187,11 +187,11 @@ $T_1 \rightarrow T_2 \rightarrow T_3$.
 
 \artout
 
-The outputs include a human-readable quick-reproduction report, a
-machine-readable manifest, summary tables for performance and accuracy, and
-the corresponding intermediate evaluation results. These outputs cover the base
-accuracy comparison, the performance comparison across different cache ratios,
-and the TableMoE comparison across different prefill recompute ratio settings
-in terms of performance, accuracy, and decode-only cache hit rate.
+The outputs include summary results for the TableMoE variants
+(\texttt{+ALUT}, \texttt{+WINDOW}, and \texttt{ALL}) and the representative
+baselines. The performance outputs compare the TableMoE variants with AdapMoE
+and AdapMoE(+gating) under the default configuration, reporting TTFT, TPOT,
+and Decoding Expert Cache Hit Rate. The accuracy outputs compare the TableMoE
+variants with AdapMoE(+gating) and Transformers.
 
 \end{document}
