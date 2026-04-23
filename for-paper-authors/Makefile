@@ -1,4 +1,4 @@
-PAPER=sc26_ad_ae_template
+PAPER=tablemoe_ad_appendix
 
 $(PAPER).pdf: $(PAPER).tex
 	pdflatex $(PAPER)
