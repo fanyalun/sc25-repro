@@ -116,16 +116,16 @@ connected via PCIe~4.0~$\times$16.
 The software environment used for evaluation is configured as follows:
 \href{https://ubuntu.com/}{Ubuntu}@22.04.4,
 \href{https://www.python.org/}{Python}@3.10.18,
-\href{https://developer.nvidia.com/cuda-toolkit}{CUDA}@12.8,
 \href{https://www.nvidia.com/drivers/}{NVIDIA Driver}@580.95.05,
+\href{https://developer.nvidia.com/cuda-toolkit}{CUDA}@12.8,
 \href{https://pytorch.org/}{PyTorch}@2.8.0+cu128,
-\href{https://github.com/huggingface/transformers}{Transformers}@4.57.0,
+\href{https://github.com/triton-lang/triton}{Triton}@3.4.0,
 \href{https://github.com/Dao-AILab/flash-attention}{FlashAttention}@2.7.3,
-and \href{https://github.com/triton-lang/triton}{Triton}@3.4.0. When running
-\href{https://huggingface.co/deepseek-ai/deepseek-vl2}{DeepSeek-VL2}, switch
-\href{https://github.com/huggingface/transformers}{Transformers} to 4.38.0 and
-install \href{https://github.com/facebookresearch/xformers}{xformers}@0.0.32.post1
-as described in the repository README.
+and \href{https://github.com/huggingface/transformers}{Transformers}@4.57.0.
+For \href{https://huggingface.co/deepseek-ai/deepseek-vl2}{DeepSeek-VL2}, use
+\href{https://github.com/huggingface/transformers}{Transformers}@4.38.0 and
+\href{https://github.com/facebookresearch/xformers}{xformers}@0.0.32.post1 as
+described in the repository README.
 
 \artinpart{Datasets / Inputs}
 
